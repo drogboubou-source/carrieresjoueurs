@@ -1,385 +1,129 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Plan de carrière</title>
-<meta name="description" content="Plan de carrière joueur : progression, rêves et objectifs, règles de carrière." />
-<meta name="theme-color" content="#0B1220" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Carrière" />
-<link rel="manifest" href="manifest.json" />
-<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan de carriere</title>
+<meta name="description" content="Plan de carriere joueur : progression, reves et objectifs.">
+<meta name="theme-color" content="#0B1220">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
-  :root{
-    --bg:#0B1220; --panel:#101B33; --panel2:#0D1730; --border:#1E2A44; --input-border:#263452;
-    --text:#EAF0FB; --text-secondary:#8B96AE; --text-muted:#5A6884;
-    --blue:#3B82F6; --blue-dark:#122A4E;
-    --red:#E2504A; --red-dark:#3A1414;
-    --gold:#F2B807; --gold-dark:#332B10;
-    --pink:#D4537E; --pink-dark:#3A1A28;
-    --purple:#7F77DD; --purple-dark:#221E42;
-    --green:#33C97E; --green-dark:#16321F;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;}
-  input,select,button,textarea{font-family:'Inter',sans-serif;}
-  button{cursor:pointer;}
-  ::placeholder{color:var(--text-muted);}
-  #root{max-width:1180px;margin:0 auto;padding:16px 12px 60px;}
-
-  .tab-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;}
-  .tab-row::-webkit-scrollbar{height:6px;}
-  .tab{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:5px 12px;border-radius:999px;font-size:12px;white-space:nowrap;}
-  .tab.active{background:var(--blue-dark);border-color:var(--blue);color:#9CC1FF;}
-  .tab-add{background:transparent;border:1px dashed #2C3A5A;color:var(--text-muted);padding:5px 12px;border-radius:999px;font-size:12px;white-space:nowrap;}
-  .io-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-  .io-btn{background:var(--panel);border:1px solid var(--border);color:var(--text-secondary);padding:5px 12px;border-radius:8px;font-size:11px;cursor:pointer;display:inline-block;}
-  .io-btn:hover{color:var(--text);border-color:var(--blue);}
-  .sync-status{width:100%;text-align:center;color:var(--text-muted);font-size:10px;margin-top:-8px;}
-  .sync-status.ok{color:var(--green);}
-  .sync-status.err{color:var(--red);}
-  .link-btn{background:transparent;border:none;color:var(--text-secondary);font-size:11px;text-decoration:underline;padding:0;}
-
-  /* HERO BANNER */
-  .banner{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:linear-gradient(120deg,#0C1730 0%,#0E1A38 45%,#170F1C 100%);padding:20px 24px;margin-bottom:14px;display:flex;flex-direction:column;gap:16px;}
-  .banner::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(59,130,246,0.14), transparent 40%, rgba(226,80,74,0.14));pointer-events:none;z-index:0;}
-
-  .banner-top{display:flex;align-items:center;gap:18px;position:relative;z-index:1;flex-wrap:wrap;}
-  .photo-wrap{position:relative;width:84px;height:84px;flex-shrink:0;}
-  .photo-bleed{width:84px;height:84px;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1.5px var(--border);}
-  .photo-bleed img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:saturate(1.05) contrast(1.03);}
-  .avatar.avatar-fallback{width:84px;height:84px;border-radius:14px;}
-  .avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--red));display:flex;align-items:center;justify-content:center;font-family:'Teko',sans-serif;font-size:26px;font-weight:600;color:#fff;flex-shrink:0;}
-  .flag-badge{position:absolute;right:-6px;bottom:-6px;width:30px;height:22px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 2px #0B1220, 0 0 0 3px var(--border);z-index:2;}
-  .flag-badge img{width:100%;height:100%;object-fit:cover;display:block;}
-
-  .banner-name-block{flex:1;min-width:200px;display:flex;flex-direction:column;gap:0px;margin-top:20px;}
-  .name-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  .player-name{font-family:'Teko',sans-serif;font-weight:700;font-size:clamp(26px,5vw,40px);line-height:1;background:linear-gradient(90deg,#EAF0FB 0%,#9CC1FF 45%,#F0908B 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:0.5px;border:none;outline:none;width:100%;min-width:0;padding:0;}
-  .mode-pill{position:absolute;top:18px;right:20px;z-index:2;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;min-height:24px;background:linear-gradient(180deg,#173A68,#122A4E);border:1px solid var(--blue);box-shadow:0 0 0 1px rgba(59,130,246,0.12),0 6px 14px rgba(0,0,0,0.18);color:#B8D4FF;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:0.5px;line-height:1;white-space:nowrap;}
-  .name-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px;}
-  .name-sub-text{font-size:12px;color:var(--text-secondary);}
-  .youtube-note{display:inline-flex;align-items:center;gap:7px;color:var(--text-secondary);font-size:12px;line-height:1;text-decoration:none;}
-  .youtube-note:hover{color:var(--text);}
-  .youtube-logo{width:22px;height:auto;display:block;flex-shrink:0;}
-  .card-head .youtube-note{font-size:11px;margin-left:44px;}
-  .card-head .youtube-logo{width:20px;}
-  .photo-field{margin-top:8px;display:flex;align-items:center;flex-wrap:wrap;}
-  .photo-upload-btn{background:var(--blue-dark);border:1px solid var(--blue);color:#9CC1FF;font-size:11px;font-weight:500;padding:6px 12px;border-radius:8px;cursor:pointer;display:inline-block;}
-  .photo-upload-btn:hover{background:#173a68;}
-
-  .club-track{display:flex;align-items:flex-start;gap:28px;position:relative;z-index:1;flex-wrap:wrap;padding-top:2px;border-top:1px solid rgba(255,255,255,0.06);}
-  .club-badge{display:flex;flex-direction:column;gap:6px;}
-  .club-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;}
-  .club-badge-row{display:flex;align-items:center;gap:10px;}
-  .club-circle{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Teko',sans-serif;font-size:11px;font-weight:600;color:#fff;flex-shrink:0;position:relative;overflow:hidden;}
-  .club-circle.blue{background:var(--blue-dark);border:1.5px solid var(--blue);color:#9CC1FF;}
-  .club-circle.red{background:var(--red-dark);border:1.5px solid var(--red);color:#F0908B;}
-  .club-circle.logo-circle{background:transparent;border-color:transparent;}
-  .club-circle.logo-circle img{width:100%;height:100%;object-fit:contain;}
-  .club-circle-fallback{display:none;width:100%;height:100%;position:absolute;inset:0;align-items:center;justify-content:center;}
-  .club-text-input{background:transparent;border:none;color:var(--text);font-size:13px;font-weight:500;outline:none;width:96px;}
-  .league-text-input{background:transparent;border:none;color:var(--text-secondary);font-size:10px;outline:none;width:96px;text-transform:uppercase;letter-spacing:0.3px;}
-
-  /* MAIN GRID */
-  .main-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px;align-items:start;}
-  @media (max-width:820px){ .main-grid{grid-template-columns:1fr;} }
-
-  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
-  .card-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);}
-  .card-head .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-  .card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
-  .card-body{padding:10px 12px;}
-
-  .table-wrap{overflow-x:auto;}
-  table{border-collapse:collapse;width:100%;min-width:900px;font-size:12px;}
-  thead th{background:#0B1730;color:#9CC1FF;font-size:9.5px;text-transform:uppercase;letter-spacing:0.3px;font-weight:600;text-align:center;padding:10px 6px;border-bottom:1px solid var(--blue);white-space:nowrap;}
-  tbody tr:nth-child(even){background:rgba(255,255,255,0.02);}
-  tbody td{padding:9px 6px;border-bottom:1px solid var(--border);vertical-align:middle;text-align:center;}
-  tbody tr{line-height:1.4;}
-  tfoot td{padding:10px 6px;font-size:12px;font-weight:700;border-top:2px solid var(--blue);background:var(--blue-dark);color:var(--text);text-align:center;}
-  .cell-input{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);padding:7px 7px;font-size:12px;outline:none;text-align:center;}
-  .cell-input:hover{border-color:var(--input-border);}
-  .cell-input:focus{border-color:var(--blue);background:var(--bg);}
-  .cell-input.mono{font-family:'JetBrains Mono',monospace;}
-  .pot-pair{display:flex;gap:4px;}
-  .pot-pair input:first-child{flex:1.3;}
-  .pot-pair input:last-child{flex:1;color:var(--gold);}
-  th.col-age,td.col-age{width:56px;}
-  th.col-club,td.col-club{width:160px;}
-  th.col-niveau,td.col-niveau,th.col-matchs,td.col-matchs,th.col-buts,td.col-buts,th.col-pd,td.col-pd,th.col-note,td.col-note{width:52px;}
-  th.col-pot,td.col-pot{width:92px;}
-  th.col-obj,td.col-obj{width:62px;}
-  th.col-bonus,td.col-bonus{width:150px;}
-  th.col-contrat,td.col-contrat{width:66px;}
-  .del-cell{width:26px;}
-  .del-btn{background:transparent;border:none;color:var(--text-muted);font-size:14px;line-height:1;padding:2px;}
-  .del-btn:hover{color:var(--red);}
-  .note-cell input{font-weight:700;}
-  .add-row-bar{padding:8px 4px 2px;}
-  .add-btn{background:var(--blue-dark);border:1px solid var(--blue);color:#9CC1FF;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500;}
-
-  .career-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
-  .summary-item{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;text-align:center;min-width:56px;}
-  .summary-value{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;}
-  .summary-label{font-size:8px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.3px;}
-
-  /* GOALS PANEL */
-  .goal-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
-  .goal-row:last-of-type{border-bottom:none;}
-  .goal-check{appearance:none;width:18px;height:18px;border:1.5px solid var(--border);border-radius:5px;background:var(--panel2);margin-top:4px;flex-shrink:0;display:grid;place-items:center;cursor:pointer;}
-  .goal-check:checked{background:var(--green-dark);border-color:var(--green);}
-  .goal-check:checked::after{content:"✓";color:var(--green);font-size:13px;font-weight:700;line-height:1;}
-  .goal-icon{width:22px;height:22px;flex-shrink:0;color:var(--gold);margin-top:2px;}
-  .goal-text{flex:1;background:transparent;border:none;color:var(--text);font-size:12.5px;line-height:1.5;outline:none;resize:none;width:100%;font-family:'Inter',sans-serif;}
-  .goal-row.done .goal-icon{color:var(--green);}
-  .goal-del{background:transparent;border:none;color:var(--text-muted);font-size:14px;flex-shrink:0;}
-  .goal-del:hover{color:var(--red);}
-  .add-goal-btn{margin-top:8px;background:transparent;border:1px dashed #2C3A5A;color:var(--text-muted);padding:6px 10px;border-radius:8px;font-size:11px;width:100%;}
-
-  /* REFERENCE CARDS */
-  .ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
-  @media (max-width:820px){ .ref-grid{grid-template-columns:1fr;} }
-  .ref-grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-bottom:12px;}
-  @media (max-width:820px){ .ref-grid2{grid-template-columns:1fr;} }
-  .ref-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
-  @media (max-width:820px){ .ref-grid3{grid-template-columns:1fr;} }
-  .ref-col{display:flex;flex-direction:column;gap:12px;}
-  .ref-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:11.5px;}
-  .ref-row:last-child{border-bottom:none;}
-  .ref-label{color:var(--text-secondary);}
-  .ref-value{color:var(--text);font-weight:500;text-align:right;}
-  .ref-value.pos{color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:700;}
-  .ref-value.neg{color:var(--red);font-family:'JetBrains Mono',monospace;font-weight:700;}
-
-  .skill-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;}
-  .skill-col{flex:1;}
-  .skill-col-title{font-size:9px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:6px;}
-  .skill-chips{display:flex;gap:6px;flex-wrap:wrap;}
-  .skill-chip{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--purple);color:#C9C5F5;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-align:center;line-height:1.1;}
-  .skill-note{font-size:10px;color:var(--text-muted);margin-top:6px;}
-
-  .footer-tag{text-align:center;font-family:'Teko',sans-serif;font-size:16px;letter-spacing:1px;color:var(--text-secondary);margin-top:16px;}
-
-  .install-bar{position:sticky;top:0;background:var(--blue-dark);border-bottom:1px solid var(--blue);color:#9CC1FF;font-size:13px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:40;}
-  .install-bar button{background:var(--blue);border:none;color:#fff;font-weight:600;padding:6px 12px;border-radius:6px;font-size:12px;}
-  .hidden{display:none !important;}
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap');
+:root{--bg:#0B1220;--panel:#101B33;--panel2:#0D1730;--border:#1E2A44;--input-border:#263452;--text:#EAF0FB;--text-secondary:#8B96AE;--text-muted:#5A6884;--blue:#3B82F6;--blue-dark:#122A4E;--red:#E2504A;--gold:#F2B807;--purple:#7F77DD;--green:#33C97E;--green-dark:#16321F}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}input,button,textarea{font-family:Inter,system-ui,sans-serif}button{cursor:pointer}::placeholder{color:var(--text-muted)}#root{max-width:1180px;margin:0 auto;padding:16px 12px 60px}
+.tab-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}.tab,.tab-add{background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:5px 12px;border-radius:999px;font-size:12px;white-space:nowrap}.tab.active{background:var(--blue-dark);border-color:var(--blue);color:#9CC1FF}.tab-add{border-style:dashed;color:var(--text-muted)}
+.io-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}.io-btn{background:var(--panel);border:1px solid var(--border);color:var(--text-secondary);padding:6px 12px;border-radius:8px;font-size:11px;display:inline-block}.io-btn:hover{color:var(--text);border-color:var(--blue)}.sync-status{width:100%;text-align:center;color:var(--text-muted);font-size:10px;margin-top:-4px}.sync-status.ok{color:var(--green)}.sync-status.err{color:var(--red)}.link-btn{background:transparent;border:none;color:var(--text-secondary);font-size:11px;text-decoration:underline;padding:0}
+.banner{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:linear-gradient(120deg,#0C1730 0%,#0E1A38 45%,#170F1C 100%);padding:20px 24px;margin-bottom:14px;display:flex;flex-direction:column;gap:16px}.banner:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(59,130,246,.14),transparent 40%,rgba(226,80,74,.14));pointer-events:none}.banner-top{display:flex;align-items:center;gap:18px;position:relative;z-index:1;flex-wrap:wrap}.photo-wrap{position:relative;width:84px;height:84px;flex-shrink:0}.photo-bleed{width:84px;height:84px;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1.5px var(--border)}.photo-bleed img{width:100%;height:100%;object-fit:cover;object-position:top center}.avatar{width:84px;height:84px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--red));display:flex;align-items:center;justify-content:center;font-family:Teko,sans-serif;font-size:26px;font-weight:600;color:#fff}.flag-badge{position:absolute;right:-6px;bottom:-6px;width:30px;height:22px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 2px #0B1220,0 0 0 3px var(--border);z-index:2}.flag-badge img{width:100%;height:100%;object-fit:cover;display:block}
+.banner-name-block{flex:1;min-width:200px;display:flex;flex-direction:column}.player-name{font-family:Teko,sans-serif;font-weight:700;font-size:clamp(28px,5vw,42px);line-height:1;background:linear-gradient(90deg,#EAF0FB 0%,#9CC1FF 45%,#F0908B 100%);-webkit-background-clip:text;background-clip:text;color:transparent;border:none;outline:none;width:100%;min-width:0;padding:0}.mode-pill{position:absolute;top:18px;right:20px;z-index:2;display:inline-flex;min-height:24px;background:linear-gradient(180deg,#173A68,#122A4E);border:1px solid var(--blue);color:#B8D4FF;font-size:10px;font-weight:700;padding:5px 10px;border-radius:999px;text-transform:uppercase}.name-sub{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.name-sub-text,.youtube-note{font-size:12px;color:var(--text-secondary);text-decoration:none}.youtube-note{display:inline-flex;align-items:center;gap:7px}.youtube-logo{width:22px;height:auto;display:block}
+.club-track{display:flex;align-items:flex-start;gap:28px;position:relative;z-index:1;flex-wrap:wrap;padding-top:2px;border-top:1px solid rgba(255,255,255,.06)}.club-badge{display:flex;flex-direction:column;gap:6px}.club-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-secondary)}.club-badge-row{display:flex;align-items:center;gap:10px}.club-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}.club-circle img{width:100%;height:100%;object-fit:contain}.club-text-input,.league-text-input{background:transparent;border:none;outline:none;width:120px}.club-text-input{color:var(--text);font-size:13px;font-weight:500}.league-text-input{color:var(--text-secondary);font-size:10px;text-transform:uppercase;letter-spacing:.3px}
+.career-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.summary-item{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;text-align:center;min-width:62px}.summary-value{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px}.summary-label{font-size:8px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.3px}.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px;align-items:start}@media(max-width:820px){.main-grid{grid-template-columns:1fr}.banner{padding:18px 16px}.mode-pill{position:static;align-self:flex-start}.ref-grid{grid-template-columns:1fr!important}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}.card-head{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border)}.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.card-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}.card-body{padding:10px 12px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:900px;font-size:12px}thead th{background:#0B1730;color:#9CC1FF;font-size:9.5px;text-transform:uppercase;letter-spacing:.3px;font-weight:600;text-align:center;padding:10px 6px;border-bottom:1px solid var(--blue);white-space:nowrap}tbody tr:nth-child(even){background:rgba(255,255,255,.02)}tbody td{padding:9px 6px;border-bottom:1px solid var(--border);vertical-align:middle;text-align:center}tfoot td{padding:10px 6px;font-size:12px;font-weight:700;border-top:2px solid var(--blue);background:var(--blue-dark);color:var(--text);text-align:center}
+.cell-input{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);padding:7px;font-size:12px;outline:none;text-align:center}.cell-input:hover{border-color:var(--input-border)}.cell-input:focus{border-color:var(--blue);background:var(--bg)}.mono,.cell-input.mono{font-family:'JetBrains Mono',monospace}.pot-pair{display:flex;gap:4px}.pot-pair input:first-child{flex:1.3}.pot-pair input:last-child{flex:1;color:var(--gold)}th.col-age,td.col-age{width:56px}th.col-club,td.col-club{width:160px}th.col-niveau,td.col-niveau,th.col-matchs,td.col-matchs,th.col-buts,td.col-buts,th.col-pd,td.col-pd,th.col-note,td.col-note{width:52px}th.col-pot,td.col-pot{width:92px}th.col-obj,td.col-obj{width:62px}th.col-bonus,td.col-bonus{width:150px}th.col-contrat,td.col-contrat{width:66px}.del-cell{width:26px}.del-btn,.goal-del{background:transparent;border:none;color:var(--text-muted);font-size:14px;line-height:1;padding:2px}.del-btn:hover,.goal-del:hover{color:var(--red)}.note-cell input{font-weight:700}.add-row-bar{padding:8px 4px 2px}.add-btn{background:var(--blue-dark);border:1px solid var(--blue);color:#9CC1FF;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500}
+.goal-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}.goal-row:last-of-type{border-bottom:none}.goal-check{appearance:none;width:18px;height:18px;border:1.5px solid var(--border);border-radius:5px;background:var(--panel2);margin-top:4px;flex-shrink:0;display:grid;place-items:center;cursor:pointer}.goal-check:checked{background:var(--green-dark);border-color:var(--green)}.goal-check:checked:after{content:"✓";color:var(--green);font-size:13px;font-weight:700;line-height:1}.goal-icon{width:22px;height:22px;flex-shrink:0;color:var(--gold);margin-top:2px}.goal-text{flex:1;background:transparent;border:none;color:var(--text);font-size:12.5px;line-height:1.5;outline:none;resize:none;width:100%}.goal-row.done .goal-icon{color:var(--green)}.add-goal-btn{margin-top:8px;background:transparent;border:1px dashed #2C3A5A;color:var(--text-muted);padding:6px 10px;border-radius:8px;font-size:11px;width:100%}
+.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}.ref-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:11.5px}.ref-row:last-child{border-bottom:none}.ref-label{color:var(--text-secondary)}.ref-value{color:var(--text);font-weight:500;text-align:right}.footer-tag{text-align:center;font-family:Teko,sans-serif;font-size:16px;letter-spacing:1px;color:var(--text-secondary);margin-top:16px}.install-bar{position:sticky;top:0;background:var(--blue-dark);border-bottom:1px solid var(--blue);color:#9CC1FF;font-size:13px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:40}.install-bar button{background:var(--blue);border:none;color:#fff;font-weight:600;padding:6px 12px;border-radius:6px;font-size:12px}.hidden{display:none!important}
 </style>
 </head>
 <body>
-
-      
-    </div>
-
-    </td>
-    <td class="col-matchs"><input class="cell-input mono" type="number" min="0" data-field="matches" value="${esc(y.matches)}" placeholder="0" /></td>
-    <td class="col-buts"><input class="cell-input mono" type="number" min="0" data-field="buts" value="${esc(y.buts)}" placeholder="0" /></td>
-    <td class="col-pd"><input class="cell-input mono" type="number" min="0" data-field="pd" value="${esc(y.pd)}" placeholder="0" /></td>
-    <td class="col-note note-cell" style="color:${ratingColor(num(y.note))}"><input class="cell-input mono" type="number" min="0" max="10" step="0.1" data-field="note" value="${esc(y.note)}" placeholder="0" /></td>
-    <td class="col-bonus"><input class="cell-input" style="text-align:left" data-field="bonus" value="${esc(y.bonus)}" placeholder="Champion D4, Promu..." /></td>
-    <td class="col-obj"><input class="cell-input" data-field="objectif" value="${esc(y.objectif)}" placeholder="0/4" /></td>
-    <td class="col-contrat"><input class="cell-input" data-field="contrat" value="${esc(y.contrat)}" placeholder="-" /></td>
-    <td class="del-cell"><button class="del-btn" data-action="delete-year" data-id="${y.id}" aria-label="Supprimer l'année">×</button></td>
-  </tr>`;
+<div id="install-bar" class="install-bar hidden"><span>Installer l'application sur cet appareil</span><button id="install-btn" type="button">Installer</button></div>
+<main id="root"></main>
+<script src="sync-config.js"></script>
+<script>
+const STORAGE_KEY = 'carrieres-fifa16-data-v1';
+const GITHUB_TOKEN_KEY = 'carrieres-fifa16-github-token';
+const HAD_SAVED_STATE = !!localStorage.getItem(STORAGE_KEY);
+const defaults = { updatedAt: new Date().toISOString(), players: [emptyPlayer('Nouveau joueur')] };
+let state = loadState();
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function emptyYear(){ return { id: uid(), age: '', club: '', niveau: '', potentiel: '', potentielDelta: '', matches: '', buts: '', pd: '', note: '', bonus: '', objectif: '', contrat: '' }; }
+function emptyGoal(text){ return { id: uid(), text: text || '', completed: false }; }
+function emptyPlayer(name){ return { id: uid(), name, currentClub: '', currentLeague: '', dreamClub: '', dreamLeague: '', goals: [emptyGoal('')], years: [emptyYear()] }; }
+function loadState(){
+  try{ const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)); if(stored && Array.isArray(stored.players) && stored.players.length) return normalizePayload(stored); }catch(err){}
+  return normalizePayload(defaults);
 }
-
-function ratingColor(r){
-  if(!r) return "var(--text)";
-  if(r>=8.5) return "var(--gold)";
-  if(r>=7) return "var(--green)";
-  if(r>=6) return "var(--text-secondary)";
-  return "var(--red)";
+function normalizePayload(payload){
+  const players = (payload.players || []).map((player) => ({
+    id: player.id || uid(), name: player.name || 'Joueur', currentClub: player.currentClub || '', currentLeague: player.currentLeague || '', dreamClub: player.dreamClub || '', dreamLeague: player.dreamLeague || '',
+    goals: Array.isArray(player.goals) && player.goals.length ? player.goals.map((goal) => ({ id: goal.id || uid(), text: goal.text || '', completed: !!goal.completed })) : [emptyGoal('')],
+    years: Array.isArray(player.years) && player.years.length ? player.years.map((year) => ({ ...emptyYear(), ...year, id: year.id || uid() })) : [emptyYear()]
+  }));
+  return { updatedAt: payload.updatedAt || new Date().toISOString(), playerId: payload.playerId || (players[0] && players[0].id), players: players.length ? players : defaults.players };
 }
-
-/* ---------- Events ---------- */
+function currentPlayer(){ return state.players.find((player) => player.id === state.playerId) || state.players[0]; }
+function getPayload(){ return { updatedAt: state.updatedAt, playerId: state.playerId, players: state.players }; }
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(getPayload())); }
+function touch(){ state.updatedAt = new Date().toISOString(); save(); }
+function esc(value){ return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
+function num(value){ const parsed = Number(String(value ?? '').replace(',', '.')); return Number.isFinite(parsed) ? parsed : 0; }
+function ratingColor(r){ if(!r) return 'var(--text)'; if(r >= 8.5) return 'var(--gold)'; if(r >= 7) return 'var(--green)'; if(r >= 6) return 'var(--text-secondary)'; return 'var(--red)'; }
+function total(field){ return currentPlayer().years.reduce((sum, year) => sum + num(year[field]), 0); }
+function avgNote(){ const notes = currentPlayer().years.map((year) => num(year.note)).filter(Boolean); return notes.length ? (notes.reduce((sum, note) => sum + note, 0) / notes.length).toFixed(1) : '0'; }
+function initials(name){ return String(name || 'J').split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase(); }
+function render(){
+  const player = currentPlayer();
+  document.getElementById('root').innerHTML = `
+    <div class="tab-row">${state.players.map((p) => `<button class="tab ${p.id === player.id ? 'active' : ''}" data-action="select-player" data-id="${esc(p.id)}">${esc(p.name)}</button>`).join('')}<button class="tab-add" data-action="add-player">+ Joueur</button><button class="tab-add" data-action="delete-player">Supprimer</button></div>
+    <div class="io-row"><button class="io-btn" data-action="export-data">Exporter data.json</button><label class="io-btn">Importer <input id="import-file-input" type="file" accept="application/json" hidden></label><button class="io-btn" data-action="load-from-repo">Charger depuis le repo</button><button class="io-btn" data-action="publish-shared">Publier sur le lien partage</button><button class="link-btn" data-action="forget-token">Oublier le token</button><div id="sync-status" class="sync-status"></div></div>
+    <section class="banner"><div class="mode-pill">FIFA 16</div><div class="banner-top"><div class="photo-wrap"><div class="photo-bleed"><img src="images/joueur-1.png" alt="" onerror="this.parentElement.innerHTML='<div class=&quot;avatar&quot;>${esc(initials(player.name))}</div>'"></div><div class="flag-badge"><img src="images/flag-1.png" alt=""></div></div><div class="banner-name-block"><input id="player-name-input" class="player-name" value="${esc(player.name)}" aria-label="Nom du joueur"><div class="name-sub"><span class="name-sub-text">${esc(player.currentClub || 'Club actuel')}</span><a class="youtube-note" href="#"><img class="youtube-logo" src="images/Youtube_logo.png" alt="">Carriere joueur</a></div></div></div><div class="club-track">${clubBlock('Club actuel','club-dortmund-ii.png','current-club-input',player.currentClub,'current-league-input',player.currentLeague)}${clubBlock('Reve','club-dortmund.png','dream-club-input',player.dreamClub,'dream-league-input',player.dreamLeague)}</div></section>
+    <div class="career-summary"><div class="summary-item"><div class="summary-value">${player.years.length}</div><div class="summary-label">Saisons</div></div><div class="summary-item"><div class="summary-value">${total('matches')}</div><div class="summary-label">Matchs</div></div><div class="summary-item"><div class="summary-value">${total('buts')}</div><div class="summary-label">Buts</div></div><div class="summary-item"><div class="summary-value">${total('pd')}</div><div class="summary-label">Passes</div></div><div class="summary-item"><div class="summary-value" style="color:${ratingColor(num(avgNote()))}">${avgNote()}</div><div class="summary-label">Note</div></div></div>
+    <div class="main-grid"><section class="card"><div class="card-head"><span class="dot" style="background:var(--blue)"></span><div class="card-title">Progression</div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th class="col-age">Age</th><th class="col-club">Club</th><th class="col-niveau">Niv.</th><th class="col-pot">Pot.</th><th class="col-matchs">Matchs</th><th class="col-buts">Buts</th><th class="col-pd">PD</th><th class="col-note">Note</th><th class="col-bonus">Bonus</th><th class="col-obj">Obj.</th><th class="col-contrat">Contrat</th><th></th></tr></thead><tbody>${player.years.map(yearRow).join('')}</tbody><tfoot><tr><td colspan="4">Total carriere</td><td>${total('matches')}</td><td>${total('buts')}</td><td>${total('pd')}</td><td>${avgNote()}</td><td colspan="4"></td></tr></tfoot></table></div><div class="add-row-bar"><button class="add-btn" data-action="add-year">+ Ajouter une saison</button></div></div></section><aside class="card"><div class="card-head"><span class="dot" style="background:var(--gold)"></span><div class="card-title">Objectifs</div></div><div class="card-body">${player.goals.map(goalRow).join('')}<button class="add-goal-btn" data-action="add-goal">+ Ajouter un objectif</button></div></aside></div>
+    <section class="ref-grid">${refCard('Reperes','var(--green)',[['Derniere sauvegarde',new Date(state.updatedAt).toLocaleString('fr-FR')],['Meilleure note',Math.max(0,...player.years.map((year)=>num(year.note))).toFixed(1)]])}${refCard('Contrat','var(--red)',[['Club',player.currentClub||'-'],['Ligue',player.currentLeague||'-']])}${refCard('Reve','var(--purple)',[['Club',player.dreamClub||'-'],['Ligue',player.dreamLeague||'-']])}</section><div class="footer-tag">PLAN DE CARRIERE</div>`;
+  attachEvents();
+}
+function clubBlock(label,image,clubId,clubValue,leagueId,leagueValue){ return `<div class="club-badge"><div class="club-label">${label}</div><div class="club-badge-row"><span class="club-circle"><img src="images/${image}" alt=""></span><div><input id="${clubId}" class="club-text-input" value="${esc(clubValue)}" placeholder="Club"><input id="${leagueId}" class="league-text-input" value="${esc(leagueValue)}" placeholder="Ligue"></div></div></div>`; }
+function refCard(title,color,rows){ return `<div class="card"><div class="card-head"><span class="dot" style="background:${color}"></span><div class="card-title">${title}</div></div><div class="card-body">${rows.map(([label,value])=>`<div class="ref-row"><span class="ref-label">${esc(label)}</span><span class="ref-value">${esc(value)}</span></div>`).join('')}</div></div>`; }
+function yearRow(y){
+  return `<tr data-year-id="${esc(y.id)}"><td class="col-age"><input class="cell-input mono" type="number" min="0" data-field="age" value="${esc(y.age)}" placeholder="16"></td><td class="col-club"><input class="cell-input" data-field="club" value="${esc(y.club)}" placeholder="Club"></td><td class="col-niveau"><input class="cell-input mono" type="number" min="0" data-field="niveau" value="${esc(y.niveau)}" placeholder="0"></td><td class="col-pot"><div class="pot-pair"><input class="cell-input mono" type="number" min="0" data-field="potentiel" value="${esc(y.potentiel)}" placeholder="0"><input class="cell-input mono" data-field="potentielDelta" value="${esc(y.potentielDelta)}" placeholder="+0"></div></td><td class="col-matchs"><input class="cell-input mono" type="number" min="0" data-field="matches" value="${esc(y.matches)}" placeholder="0"></td><td class="col-buts"><input class="cell-input mono" type="number" min="0" data-field="buts" value="${esc(y.buts)}" placeholder="0"></td><td class="col-pd"><input class="cell-input mono" type="number" min="0" data-field="pd" value="${esc(y.pd)}" placeholder="0"></td><td class="col-note note-cell" style="color:${ratingColor(num(y.note))}"><input class="cell-input mono" type="number" min="0" max="10" step="0.1" data-field="note" value="${esc(y.note)}" placeholder="0"></td><td class="col-bonus"><input class="cell-input" style="text-align:left" data-field="bonus" value="${esc(y.bonus)}" placeholder="Champion D4, Promu..."></td><td class="col-obj"><input class="cell-input" data-field="objectif" value="${esc(y.objectif)}" placeholder="0/4"></td><td class="col-contrat"><input class="cell-input" data-field="contrat" value="${esc(y.contrat)}" placeholder="-"></td><td class="del-cell"><button class="del-btn" data-action="delete-year" data-id="${esc(y.id)}" aria-label="Supprimer la saison">x</button></td></tr>`;
+}
+function goalRow(goal){ return `<div class="goal-row ${goal.completed ? 'done' : ''}" data-goal-id="${esc(goal.id)}"><input class="goal-check" type="checkbox" data-field="goal-completed" ${goal.completed ? 'checked' : ''}><div class="goal-icon">◆</div><textarea class="goal-text" data-field="goal-text" rows="2" placeholder="Objectif">${esc(goal.text)}</textarea><button class="goal-del" data-action="delete-goal" data-id="${esc(goal.id)}">x</button></div>`; }
 function attachEvents(){
-  const root = document.getElementById('root');
-
-  const exportBtn = root.querySelector('[data-action="export-data"]');
-  if(exportBtn) exportBtn.addEventListener('click', () => {
-    touch(); // stamp "now" as the export moment, so viewers can tell this is newer
-    const payload = getPayload();
-    const data = JSON.stringify(payload, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'data.json';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-  const publishBtn = root.querySelector('[data-action="publish-shared"]');
-  const syncStatus = root.querySelector('#sync-status');
-  if(publishBtn) publishBtn.addEventListener('click', async () => {
-    publishBtn.textContent = 'Publication...';
-    publishBtn.disabled = true;
-    if(syncStatus) syncStatus.className = 'sync-status';
-    try{
-      await publishToGithub();
-      if(syncStatus){
-        syncStatus.textContent = "Donnees publiees. Les visiteurs du lien verront la mise a jour apres rafraichissement.";
-        syncStatus.className = 'sync-status ok';
-      }
-      publishBtn.textContent = 'Publie';
-      setTimeout(() => { publishBtn.textContent = 'Publier sur le lien partage'; publishBtn.disabled = false; }, 1800);
-    } catch(err){
-      if(syncStatus){
-        syncStatus.textContent = `Publication impossible : ${err.message || err}`;
-        syncStatus.className = 'sync-status err';
-      }
-      publishBtn.textContent = 'Publier sur le lien partage';
-      publishBtn.disabled = false;
-    }
-  });
-  const forgetTokenBtn = root.querySelector('[data-action="forget-token"]');
-  if(forgetTokenBtn) forgetTokenBtn.addEventListener('click', () => {
-    localStorage.removeItem(GITHUB_TOKEN_KEY);
-    if(syncStatus){
-      syncStatus.textContent = "Token oublie sur cet appareil.";
-      syncStatus.className = 'sync-status ok';
-    }
-  });
-  const loadRepoBtn = root.querySelector('[data-action="load-from-repo"]');
-  if(loadRepoBtn) loadRepoBtn.addEventListener('click', async () => {
-    loadRepoBtn.textContent = '⟳ Chargement...';
-    try{
-      applySharedData(await fetchSharedData());
-    } catch(err){
-      alert("Impossible de trouver data.json à la racine du site. Vérifie qu'il a bien été ajouté au repo.");
-      loadRepoBtn.textContent = '⟳ Charger depuis le repo';
-    }
-  });
-  const importInput = root.querySelector('#import-file-input');
-  if(importInput) importInput.addEventListener('change', (e) => {
-    const file = e.target.files && e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try{
-        const parsed = JSON.parse(ev.target.result);
-        const players = Array.isArray(parsed) ? parsed : parsed.players;
-        if(!Array.isArray(players) || !players.length) throw new Error('empty');
-        state.players = players;
-        state.updatedAt = Array.isArray(parsed) ? new Date().toISOString() : (parsed.updatedAt || new Date().toISOString());
-        state.playerId = players[0].id;
-        save();
-        render();
-      } catch(err){
-        alert("Ce fichier ne semble pas être un export valide.");
-      }
-    };
-    reader.readAsText(file);
-  });
-
-  root.querySelectorAll('[data-action="select-player"]').forEach(el => {
-    el.addEventListener('click', () => { state.playerId = el.dataset.id; render(); });
-  });
-  const addPlayerBtn = root.querySelector('[data-action="add-player"]');
-  if(addPlayerBtn) addPlayerBtn.addEventListener('click', () => {
-    const p = emptyPlayer(`Joueur ${state.players.length+1}`);
-    state.players.push(p); state.playerId = p.id; touch(); render();
-  });
-  const delPlayerBtn = root.querySelector('[data-action="delete-player"]');
-  if(delPlayerBtn) delPlayerBtn.addEventListener('click', () => {
-    if(state.players.length<=1) return;
-    state.players = state.players.filter(p => p.id !== state.playerId);
-    state.playerId = state.players[0].id; touch(); render();
-  });
-
-  const nameInput = root.querySelector('#player-name-input');
-  if(nameInput) nameInput.addEventListener('input', () => { currentPlayer().name = nameInput.value || currentPlayer().name; touch(); });
-  if(nameInput) nameInput.addEventListener('change', () => { currentPlayer().name = nameInput.value || currentPlayer().name; touch(); render(); });
-  const ccInput = root.querySelector('#current-club-input');
-  if(ccInput) ccInput.addEventListener('input', () => { currentPlayer().currentClub = ccInput.value; touch(); });
-  if(ccInput) ccInput.addEventListener('change', () => { currentPlayer().currentClub = ccInput.value; touch(); render(); });
-  const clInput = root.querySelector('#current-league-input');
-  if(clInput) clInput.addEventListener('input', () => { currentPlayer().currentLeague = clInput.value; touch(); });
-  if(clInput) clInput.addEventListener('change', () => { currentPlayer().currentLeague = clInput.value; touch(); });
-  const dcInput = root.querySelector('#dream-club-input');
-  if(dcInput) dcInput.addEventListener('input', () => { currentPlayer().dreamClub = dcInput.value; touch(); });
-  if(dcInput) dcInput.addEventListener('change', () => { currentPlayer().dreamClub = dcInput.value; touch(); render(); });
-  const dlInput = root.querySelector('#dream-league-input');
-  if(dlInput) dlInput.addEventListener('input', () => { currentPlayer().dreamLeague = dlInput.value; touch(); });
-  if(dlInput) dlInput.addEventListener('change', () => { currentPlayer().dreamLeague = dlInput.value; touch(); });
-
-  const addYearBtn = root.querySelector('[data-action="add-year"]');
-  if(addYearBtn) addYearBtn.addEventListener('click', () => { currentPlayer().years.push(emptyYear()); touch(); render(); });
-
-  root.querySelectorAll('tbody tr[data-year-id]').forEach(tr => {
-    const year = currentPlayer().years.find(y => y.id === tr.dataset.yearId);
-    tr.querySelectorAll('[data-field]').forEach(inp => {
-      inp.addEventListener('input', () => {
-        year[inp.dataset.field] = inp.value;
-        touch();
-      });
-      inp.addEventListener('change', () => {
-        year[inp.dataset.field] = inp.value;
-        touch();
-        if(inp.dataset.field === 'matches' || inp.dataset.field === 'note') render();
-      });
-    });
-  });
-  root.querySelectorAll('[data-action="delete-year"]').forEach(el => {
-    el.addEventListener('click', () => {
-      const p = currentPlayer();
-      p.years = p.years.filter(y => y.id !== el.dataset.id);
-      touch(); render();
-    });
-  });
-
-  const addGoalBtn = root.querySelector('[data-action="add-goal"]');
-  if(addGoalBtn) addGoalBtn.addEventListener('click', () => { currentPlayer().goals.push(emptyGoal("")); touch(); render(); });
-  root.querySelectorAll('.goal-row').forEach(row => {
-    const goal = currentPlayer().goals.find(g => g.id === row.dataset.goalId);
-    const ta = row.querySelector('[data-field="goal-text"]');
-    if(ta) ta.addEventListener('input', () => { goal.text = ta.value; touch(); });
-    if(ta) ta.addEventListener('change', () => { goal.text = ta.value; touch(); });
-    const cb = row.querySelector('[data-field="goal-completed"]');
-    if(cb) cb.addEventListener('change', () => { goal.completed = cb.checked; touch(); render(); });
-  });
-  root.querySelectorAll('[data-action="delete-goal"]').forEach(el => {
-    el.addEventListener('click', () => {
-      const p = currentPlayer();
-      p.goals = p.goals.filter(g => g.id !== el.dataset.id);
-      touch(); render();
-    });
-  });
+  const root = document.getElementById('root'); const syncStatus = root.querySelector('#sync-status');
+  root.querySelector('[data-action="export-data"]').addEventListener('click', exportData);
+  root.querySelector('[data-action="publish-shared"]').addEventListener('click', (event) => publishClick(event, syncStatus));
+  root.querySelector('[data-action="forget-token"]').addEventListener('click', () => { localStorage.removeItem(GITHUB_TOKEN_KEY); syncStatus.textContent = 'Token oublie sur cet appareil.'; syncStatus.className = 'sync-status ok'; });
+  root.querySelector('[data-action="load-from-repo"]').addEventListener('click', loadFromRepo);
+  root.querySelector('#import-file-input').addEventListener('change', importData);
+  root.querySelectorAll('[data-action="select-player"]').forEach((el) => el.addEventListener('click', () => { state.playerId = el.dataset.id; save(); render(); }));
+  root.querySelector('[data-action="add-player"]').addEventListener('click', () => { const player = emptyPlayer(`Joueur ${state.players.length + 1}`); state.players.push(player); state.playerId = player.id; touch(); render(); });
+  root.querySelector('[data-action="delete-player"]').addEventListener('click', () => { if(state.players.length <= 1) return; state.players = state.players.filter((player) => player.id !== state.playerId); state.playerId = state.players[0].id; touch(); render(); });
+  bindPlayerInput('#player-name-input','name'); bindPlayerInput('#current-club-input','currentClub'); bindPlayerInput('#current-league-input','currentLeague'); bindPlayerInput('#dream-club-input','dreamClub'); bindPlayerInput('#dream-league-input','dreamLeague');
+  root.querySelector('[data-action="add-year"]').addEventListener('click', () => { currentPlayer().years.push(emptyYear()); touch(); render(); });
+  root.querySelectorAll('tbody tr[data-year-id]').forEach((tr) => { const year = currentPlayer().years.find((item) => item.id === tr.dataset.yearId); tr.querySelectorAll('[data-field]').forEach((input) => { input.addEventListener('input', () => { year[input.dataset.field] = input.value; touch(); }); input.addEventListener('change', () => { year[input.dataset.field] = input.value; touch(); render(); }); }); });
+  root.querySelectorAll('[data-action="delete-year"]').forEach((el) => el.addEventListener('click', () => { currentPlayer().years = currentPlayer().years.filter((year) => year.id !== el.dataset.id); if(!currentPlayer().years.length) currentPlayer().years.push(emptyYear()); touch(); render(); }));
+  root.querySelector('[data-action="add-goal"]').addEventListener('click', () => { currentPlayer().goals.push(emptyGoal('')); touch(); render(); });
+  root.querySelectorAll('.goal-row').forEach((row) => { const goal = currentPlayer().goals.find((item) => item.id === row.dataset.goalId); row.querySelector('[data-field="goal-text"]').addEventListener('input', (event) => { goal.text = event.target.value; touch(); }); row.querySelector('[data-field="goal-completed"]').addEventListener('change', (event) => { goal.completed = event.target.checked; touch(); render(); }); });
+  root.querySelectorAll('[data-action="delete-goal"]').forEach((el) => el.addEventListener('click', () => { currentPlayer().goals = currentPlayer().goals.filter((goal) => goal.id !== el.dataset.id); if(!currentPlayer().goals.length) currentPlayer().goals.push(emptyGoal('')); touch(); render(); }));
 }
-
+function bindPlayerInput(selector,field){ const input = document.querySelector(selector); input.addEventListener('input', () => { currentPlayer()[field] = input.value; touch(); }); input.addEventListener('change', () => { currentPlayer()[field] = input.value; touch(); render(); }); }
+function exportData(){ touch(); const blob = new Blob([JSON.stringify(getPayload(), null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'data.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+function importData(event){ const file = event.target.files && event.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try{ applySharedData(JSON.parse(ev.target.result)); }catch(err){ alert("Ce fichier ne semble pas etre un export valide."); } }; reader.readAsText(file); }
+async function loadFromRepo(event){ event.currentTarget.textContent = 'Chargement...'; try{ applySharedData(await fetchSharedData()); }catch(err){ alert("Impossible de trouver data.json a la racine du site. Verifie qu'il a bien ete ajoute au repo."); } event.currentTarget.textContent = 'Charger depuis le repo'; }
+async function fetchSharedData(){ const response = await fetch('data.json', { cache: 'no-store' }); if(!response.ok) throw new Error('data.json introuvable'); return response.json(); }
+function applySharedData(payload){ state = normalizePayload(Array.isArray(payload) ? { players: payload } : payload); save(); render(); }
+function applySharedDataIfNewer(payload){ const incoming = normalizePayload(Array.isArray(payload) ? { players: payload } : payload); if(new Date(incoming.updatedAt).getTime() > new Date(state.updatedAt).getTime()){ state = incoming; save(); render(); } }
+async function publishClick(event,syncStatus){
+  const btn = event.currentTarget; btn.textContent = 'Publication...'; btn.disabled = true; syncStatus.className = 'sync-status';
+  try{ await publishToGithub(); syncStatus.textContent = 'Donnees publiees. Les visiteurs verront la mise a jour apres rafraichissement.'; syncStatus.className = 'sync-status ok'; btn.textContent = 'Publie'; setTimeout(() => { btn.textContent = 'Publier sur le lien partage'; btn.disabled = false; }, 1800); }
+  catch(err){ syncStatus.textContent = `Publication impossible : ${err.message || err}`; syncStatus.className = 'sync-status err'; btn.textContent = 'Publier sur le lien partage'; btn.disabled = false; }
+}
+async function publishToGithub(){
+  const config = window.CARRIERE_SYNC || {}; if(!config.owner || !config.repo) throw new Error('Configure owner et repo dans sync-config.js');
+  let token = localStorage.getItem(GITHUB_TOKEN_KEY); if(!token){ token = prompt('Token GitHub avec droit Contents: Read and write'); if(!token) throw new Error('token manquant'); localStorage.setItem(GITHUB_TOKEN_KEY, token); }
+  const path = config.path || 'data.json'; const branch = config.branch || 'main'; const apiUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`; let sha = null;
+  const current = await fetch(`${apiUrl}?ref=${encodeURIComponent(branch)}`, { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }); if(current.ok) sha = (await current.json()).sha;
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(getPayload(), null, 2))));
+  const response = await fetch(apiUrl, { method: 'PUT', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' }, body: JSON.stringify({ message: 'Update career data', content, branch, sha }) });
+  if(!response.ok){ const body = await response.json().catch(() => ({})); throw new Error(body.message || 'erreur GitHub'); }
+}
 render();
-
-/* Keep local edits after refresh. The shared data.json is loaded only when it is
-   newer than this browser's local copy. */
-fetchSharedData()
-  .then(applySharedDataIfNewer)
-  .catch(() => {});
-
-/* ---------- PWA: service worker (static file, manifest linked in <head>) ---------- */
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
-
+fetchSharedData().then((payload) => HAD_SAVED_STATE ? applySharedDataIfNewer(payload) : applySharedData(payload)).catch(() => {});
+if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-bar').classList.remove('hidden');
-});
-document.getElementById('install-btn').addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('install-bar').classList.add('hidden');
-});
-window.addEventListener('appinstalled', () => {
-  document.getElementById('install-bar').classList.add('hidden');
-});
+window.addEventListener('beforeinstallprompt', (event) => { event.preventDefault(); deferredPrompt = event; document.getElementById('install-bar').classList.remove('hidden'); });
+document.getElementById('install-btn').addEventListener('click', async () => { if(!deferredPrompt) return; deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; document.getElementById('install-bar').classList.add('hidden'); });
+window.addEventListener('appinstalled', () => document.getElementById('install-bar').classList.add('hidden'));
 </script>
 </body>
 </html>
