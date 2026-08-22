@@ -146,9 +146,9 @@ function getClubRecords(clubName){ if (!state.clubsData[clubName]) state.clubsDa
 function clubRecordRows(clubName){
   return getClubRecords(clubName).map((r) => ({ id: r.id, name: r.name || '(sans nom)', matches: num(r.matches), goals: num(r.goals), assists: num(r.assists), isPlayer: false }));
 }
-function trackedPlayerRowsForClub(clubName){
+function trackedPlayerRowsForClub(clubName, alwaysIncludeId){
   return state.players.map((p) => ({ id: 'tracked-' + p.id, playerId: p.id, name: p.name || 'Joueur', matches: sumFieldForClub(p, 'matches', clubName), goals: sumFieldForClub(p, 'buts', clubName), assists: sumFieldForClub(p, 'pd', clubName), isPlayer: true }))
-    .filter((r) => r.matches > 0 || r.goals > 0 || r.assists > 0);
+    .filter((r) => r.matches > 0 || r.goals > 0 || r.assists > 0 || r.id === alwaysIncludeId);
 }
 function topRanking(rows, statKey, limit){
   const sorted = rows.slice().sort((a, b) => b[statKey] - a[statKey]);
@@ -162,7 +162,7 @@ function topRanking(rows, statKey, limit){
 function palmaresCard(){
   const viewClub = computeViewClub();
   const currentId = 'tracked-' + currentPlayer().id;
-  const trackedRows = trackedPlayerRowsForClub(viewClub);
+  const trackedRows = trackedPlayerRowsForClub(viewClub, currentId);
   const allRows = clubRecordRows(viewClub).concat(trackedRows);
   const buteursTop = topRanking(allRows, 'goals', PALMARES.buteursLimit);
   const passeursTop = topRanking(allRows, 'assists', PALMARES.passeursLimit);
