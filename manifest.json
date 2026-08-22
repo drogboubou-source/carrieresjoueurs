@@ -1,6 +1,6 @@
 {
   "name": "Plan de carrière",
-  "short_name": "Carrière",
+  "short_name": "Carrières",
   "description": "Plan de carrière joueur, année par année.",
   "start_url": "./",
   "scope": "./",
