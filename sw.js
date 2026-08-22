@@ -1,4 +1,4 @@
-const CACHE = 'carriere-v40';
+const CACHE = 'carriere-v41';
 const CORE_ASSETS = ['./', './index.html', './manifest.json', './sync-config.js'];
 
 self.addEventListener('install', (e) => {
