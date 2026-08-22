@@ -62,18 +62,28 @@ const PALMARES = {
     { rank: 4, name: 'Roberto López Ufarte', matches: 381, goals: 103 },
     { rank: 5, name: 'Meho Kodro', matches: 144, goals: 81 },
     { rank: 6, name: 'Carlos Vela', matches: 250, goals: 73 },
-    { rank: 7, name: 'Xabi Prieto', matches: 527, goals: 73 },
-    { rank: 8, name: 'José María Bakero', matches: 239, goals: 68 }
+    { rank: 6, name: 'Agirretxe', matches: 271, goals: 73 },
+    { rank: 6, name: 'Xabi Prieto', matches: 527, goals: 73 },
+    { rank: 9, name: 'José María Bakero', matches: 239, goals: 68 },
+    { rank: 10, name: 'Uralde', matches: 196, goals: 67 },
+    { rank: 11, name: 'Jesús Zamora', matches: 488, goals: 65 },
+    { rank: 12, name: 'Willian José', matches: 170, goals: 62 },
+    { rank: 13, name: 'Igoa', matches: 116, goals: 60 },
+    { rank: 13, name: 'De Paula', matches: 300, goals: 60 },
+    { rank: 15, name: 'Nihat Kahveci', matches: 142, goals: 57 },
+    { rank: 16, name: 'Paz', matches: 227, goals: 56 },
+    { rank: 17, name: 'Cholín', matches: 95, goals: 53 },
+    { rank: 18, name: 'Antoine Griezmann', matches: 201, goals: 52 },
+    { rank: 18, name: 'De Pedro', matches: 325, goals: 52 },
+    { rank: 20, name: 'Epi', matches: 135, goals: 46 }
   ],
   passeurs: [
-    { name: 'Xabi Prieto', note: 'Meneur de jeu emblématique, plus de 500 matchs avec la Real, saison référence 2010-11 (13 passes décisives)' },
-    { name: 'Xabi Alonso', note: 'Formé au club, distributeur reconnu avant son envol vers Liverpool puis le Real Madrid' },
-    { name: 'David Zurutuza', note: 'Milieu créatif, pilier du jeu offensif basque dans les années 2010' },
-    { name: 'Antoine Griezmann', note: 'Explosif offensivement lors de son passage formateur à la Real (2009-2014)' },
-    { name: 'Mikel Oyarzabal', note: 'Capitaine actuel, principal pourvoyeur de buts pour ses coéquipiers ces dernières saisons' },
-    { name: 'Sergio Canales', note: 'Meneur de jeu technique, passeur clé lors de son passage donostiarra' }
+    { rank: 1, name: 'Xabi Prieto', matches: 544, assists: 52, scope: 'toutes competitions' },
+    { rank: 2, name: 'Mikel Merino', matches: 190, assists: 22, scope: 'LaLiga uniquement' },
+    { rank: 3, name: 'Antoine Griezmann', matches: 202, assists: 12, scope: 'toutes competitions' },
+    { rank: 4, name: 'Xabi Alonso', matches: 124, assists: 9, scope: 'toutes competitions' }
   ],
-  note: "Contrairement aux buts, les passes décisives n'ont pas été comptabilisées de façon officielle sur toute l'histoire du club : cette liste met en avant les joueurs les plus reconnus pour leur registre créatif plutôt qu'un classement chiffré exhaustif."
+  note: "Contrairement aux buts, il n'existe pas de classement officiel et exhaustif des passeurs sur toute l'histoire du club (les passes decisives ne sont trackees de facon fiable que depuis 15-20 ans). Ce classement compile les totaux carriere au club les plus solidement sources trouves pour l'instant ; il n'est pas garanti complet, d'autres joueurs pourraient s'y ajouter avec de meilleures donnees."
 };
 function currentPlayer(){ return state.players.find((player) => player.id === state.playerId) || state.players[0]; }
 function getPayload(){ return { updatedAt: state.updatedAt, playerId: state.playerId, players: state.players }; }
@@ -99,8 +109,8 @@ function render(){
 function clubBlock(label,image,clubId,clubValue,leagueId,leagueValue){ return `<div class="club-badge"><div class="club-label">${label}</div><div class="club-badge-row"><span class="club-circle"><img src="images/${image}" alt=""></span><div><input id="${clubId}" class="club-text-input" value="${esc(clubValue)}" placeholder="Club"><input id="${leagueId}" class="league-text-input" value="${esc(leagueValue)}" placeholder="Ligue"></div></div></div>`; }
 function palmaresCard(){
   const buteursRows = PALMARES.buteurs.map((p) => `<li><span class="palmares-rank">${p.rank}</span><div class="palmares-info"><span class="palmares-name">${esc(p.name)}</span><span class="palmares-sub">${p.matches} matchs</span></div><span class="palmares-goals">${p.goals}</span></li>`).join('');
-  const passeursRows = PALMARES.passeurs.map((p) => `<li><div class="palmares-info"><span class="palmares-name">${esc(p.name)}</span><span class="palmares-sub">${esc(p.note)}</span></div></li>`).join('');
-  return `<section class="card palmares-card"><div class="card-head"><span class="dot" style="background:var(--gold)"></span><div class="card-title">Palmares historique — ${esc(PALMARES.club)}</div></div><div class="card-body"><div class="palmares-subtitle">⚽ Meilleurs buteurs</div><ul class="palmares-list">${buteursRows}</ul><div class="palmares-subtitle">🎯 Meilleurs passeurs</div><ul class="palmares-list">${passeursRows}</ul><div class="palmares-note">${esc(PALMARES.note)}<br>${esc(PALMARES.source)}</div></div></section>`;
+  const passeursRows = PALMARES.passeurs.map((p) => `<li><span class="palmares-rank">${p.rank}</span><div class="palmares-info"><span class="palmares-name">${esc(p.name)}</span><span class="palmares-sub">${p.matches} matchs${p.scope ? ' · ' + esc(p.scope) : ''}</span></div><span class="palmares-goals">${p.assists}</span></li>`).join('');
+  return `<section class="card palmares-card"><div class="card-head"><span class="dot" style="background:var(--gold)"></span><div class="card-title">Palmares historique — ${esc(PALMARES.club)}</div></div><div class="card-body"><div class="palmares-subtitle">⚽ Meilleurs buteurs (Top 20)</div><ul class="palmares-list">${buteursRows}</ul><div class="palmares-subtitle">🎯 Meilleurs passeurs</div><ul class="palmares-list">${passeursRows}</ul><div class="palmares-note">${esc(PALMARES.note)}<br>${esc(PALMARES.source)}</div></div></section>`;
 }
 function yearRow(y){
   return `<tr data-year-id="${esc(y.id)}"><td class="col-age"><input class="cell-input mono" type="number" min="0" data-field="age" value="${esc(y.age)}" placeholder="16"></td><td class="col-club"><input class="cell-input" data-field="club" value="${esc(y.club)}" placeholder="Club"></td><td class="col-niveau"><input class="cell-input mono" type="number" min="0" data-field="niveau" value="${esc(y.niveau)}" placeholder="0"></td><td class="col-pot"><div class="pot-pair"><input class="cell-input mono" type="number" min="0" data-field="potentiel" value="${esc(y.potentiel)}" placeholder="0"><input class="cell-input mono" data-field="potentielDelta" value="${esc(y.potentielDelta)}" placeholder="+0"></div></td><td class="col-matchs"><input class="cell-input mono" type="number" min="0" data-field="matches" value="${esc(y.matches)}" placeholder="0"></td><td class="col-buts"><input class="cell-input mono" type="number" min="0" data-field="buts" value="${esc(y.buts)}" placeholder="0"></td><td class="col-pd"><input class="cell-input mono" type="number" min="0" data-field="pd" value="${esc(y.pd)}" placeholder="0"></td><td class="col-note note-cell" style="color:${ratingColor(num(y.note))}"><input class="cell-input mono" type="number" min="0" max="10" step="0.1" data-field="note" value="${esc(y.note)}" placeholder="0"></td><td class="col-bonus"><input class="cell-input" style="text-align:left" data-field="bonus" value="${esc(y.bonus)}" placeholder="Champion D4, Promu..."></td><td class="col-obj"><input class="cell-input" data-field="objectif" value="${esc(y.objectif)}" placeholder="0/4"></td><td class="col-contrat"><input class="cell-input" data-field="contrat" value="${esc(y.contrat)}" placeholder="-"></td><td class="del-cell"><button class="del-btn" data-action="delete-year" data-id="${esc(y.id)}" aria-label="Supprimer la saison">x</button></td></tr>`;
