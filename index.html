@@ -35,7 +35,6 @@ const STORAGE_KEY = 'carrieres-fifa16-data-v1';
 const GITHUB_TOKEN_KEY = 'carrieres-fifa16-github-token';
 const HAD_SAVED_STATE = !!localStorage.getItem(STORAGE_KEY);
 const defaults = { updatedAt: new Date().toISOString(), players: [emptyPlayer('Nouveau joueur')] };
-let state = loadState();
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 function emptyYear(){ return { id: uid(), age: '', club: '', niveau: '', potentiel: '', potentielDelta: '', matches: '', buts: '', pd: '', note: '', bonus: '', objectif: '', contrat: '' }; }
 function emptyGoal(text){ return { id: uid(), text: text || '', completed: false }; }
@@ -95,6 +94,7 @@ function normalizePayload(payload){
     : CLUB_RECORDS_SEED.map(([name, matches, goals, assists]) => emptyClubRecord(name, matches, goals, assists));
   return { updatedAt: payload.updatedAt || new Date().toISOString(), playerId: payload.playerId || (players[0] && players[0].id), players: players.length ? players : defaults.players, clubRecords };
 }
+let state = loadState();
 const PALMARES = {
   club: 'Real Sociedad',
   sourceButeurs: 'Historique initial : mondefootball.fr / Transfermarkt. Modifiable ci-dessous (transferts, regens, progression des pros).',
