@@ -101,7 +101,7 @@ function normalizePayload(payload){
   } else {
     clubsData = { 'Real Sociedad': CLUB_RECORDS_SEED.map(([name, matches, goals, assists]) => emptyClubRecord(name, matches, goals, assists)) };
   }
-  return { updatedAt: payload.updatedAt || new Date().toISOString(), playerId: payload.playerId || (players[0] && players[0].id), players: players.length ? players : defaults.players, clubsData };
+  return { updatedAt: payload.updatedAt || new Date().toISOString(), playerId: payload.playerId || (players[0] && players[0].id), players: players.length ? players : defaults.players, clubsData, activePalmaresClub: (payload.activePalmaresClub || '').trim() || 'Real Sociedad' };
 }
 let state = loadState();
 const PALMARES = {
@@ -112,7 +112,7 @@ const PALMARES = {
   passeursLimit: 25
 };
 function currentPlayer(){ return state.players.find((player) => player.id === state.playerId) || state.players[0]; }
-function getPayload(){ return { updatedAt: state.updatedAt, playerId: state.playerId, players: state.players, clubsData: state.clubsData }; }
+function getPayload(){ return { updatedAt: state.updatedAt, playerId: state.playerId, players: state.players, clubsData: state.clubsData, activePalmaresClub: state.activePalmaresClub }; }
 function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(getPayload())); }
 function touch(){ state.updatedAt = new Date().toISOString(); save(); }
 function esc(value){ return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
@@ -134,9 +134,7 @@ function render(){
 }
 function clubBlock(label,image,clubId,clubValue,leagueId,leagueValue){ return `<div class="club-badge"><div class="club-label">${label}</div><div class="club-badge-row"><span class="club-circle"><img src="images/${image}" alt=""></span><div><input id="${clubId}" class="club-text-input" value="${esc(clubValue)}" placeholder="Club"><input id="${leagueId}" class="league-text-input" value="${esc(leagueValue)}" placeholder="Ligue"></div></div></div>`; }
 let palmaresManagerOpen = false;
-let palmaresViewClubOverride = '';
-function getActiveClub(){ return (currentPlayer().currentClub || '').trim() || 'Real Sociedad'; }
-function computeViewClub(){ return (palmaresViewClubOverride || '').trim() || getActiveClub(); }
+function computeViewClub(){ return (state.activePalmaresClub || '').trim() || 'Real Sociedad'; }
 function clubMatches(yearClub, clubName){
   if (!yearClub || !clubName) return false;
   const a = String(yearClub).toLowerCase().trim(); const b = String(clubName).toLowerCase().trim();
@@ -159,9 +157,7 @@ function topRanking(rows, statKey, limit){
   return sorted.slice(0, limit);
 }
 function palmaresCard(){
-  const autoClub = getActiveClub();
   const viewClub = computeViewClub();
-  const isOverride = viewClub.toLowerCase() !== autoClub.toLowerCase();
   const currentId = 'tracked-' + currentPlayer().id;
   const trackedRows = trackedPlayerRowsForClub(viewClub);
   const allRows = clubRecordRows(viewClub).concat(trackedRows);
@@ -186,7 +182,7 @@ function palmaresCard(){
   const managerRows = clubRecordsForView.map((r) => `<div class="clubrec-row" data-id="${esc(r.id)}"><div class="clubrec-line1"><input class="cell-input clubrec-name" data-field="name" value="${esc(r.name)}" placeholder="Nom du joueur"><button class="del-btn" data-action="delete-clubrec" data-id="${esc(r.id)}" aria-label="Supprimer">x</button></div><div class="clubrec-line2"><div class="clubrec-field"><span class="clubrec-label">Matchs</span><input class="cell-input mono" type="number" min="0" data-field="matches" value="${esc(r.matches)}"></div><div class="clubrec-field"><span class="clubrec-label">Buts</span><input class="cell-input mono" type="number" min="0" data-field="goals" value="${esc(r.goals)}"></div><div class="clubrec-field"><span class="clubrec-label">Passes D.</span><input class="cell-input mono" type="number" min="0" data-field="assists" value="${esc(r.assists)}"></div></div></div>`).join('');
   const managerSection = palmaresManagerOpen ? `<div class="palmares-manager"><div class="palmares-manager-hint">${clubRecordsForView.length} joueur(s) enregistré(s) pour ${esc(viewClub)}. Ajoute ici les transferts, regens ou mets à jour les stats des pros (ex: Mbappé, Vinicius) au fil de ta partie. Astuce : le club de chaque saison dans "Progression" doit correspondre au nom du club ci-dessus pour que tes stats comptent dans le bon palmarès.</div><input id="palmares-search-input" class="cell-input palmares-search" type="text" placeholder="Rechercher un joueur..."><div id="palmares-rows-wrap">${managerRows}</div><div class="add-row-bar"><button class="add-btn" data-action="add-clubrec">+ Ajouter un joueur</button></div></div>` : '';
 
-  const clubSwitch = `<div class="palmares-club-switch"><span class="clubrec-label">Club affiché</span><input id="palmares-club-input" class="cell-input" value="${esc(viewClub)}"></div>${isOverride ? `<button class="link-btn palmares-reset" data-action="reset-palmares-club">↺ Revenir au club actuel de ${esc(currentPlayer().name)} (${esc(autoClub)})</button>` : ''}`;
+  const clubSwitch = `<div class="palmares-club-switch"><span class="clubrec-label">Club affiché</span><input id="palmares-club-input" class="cell-input" value="${esc(viewClub)}"></div>`;
 
   return `<section class="card palmares-card"><div class="card-head"><span class="dot" style="background:var(--gold)"></span><div class="card-title">Palmares historique — ${esc(viewClub)}</div></div><div class="card-body">
     ${clubSwitch}
@@ -218,8 +214,7 @@ function attachEvents(){
   root.querySelectorAll('.goal-row').forEach((row) => { const goal = currentPlayer().goals.find((item) => item.id === row.dataset.goalId); row.querySelector('[data-field="goal-text"]').addEventListener('input', (event) => { goal.text = event.target.value; touch(); }); row.querySelector('[data-field="goal-completed"]').addEventListener('change', (event) => { goal.completed = event.target.checked; touch(); render(); }); });
   root.querySelectorAll('[data-action="delete-goal"]').forEach((el) => el.addEventListener('click', () => { currentPlayer().goals = currentPlayer().goals.filter((goal) => goal.id !== el.dataset.id); if(!currentPlayer().goals.length) currentPlayer().goals.push(emptyGoal('')); touch(); render(); }));
   const toggleBtn = root.querySelector('[data-action="toggle-palmares-manager"]'); if(toggleBtn) toggleBtn.addEventListener('click', () => { palmaresManagerOpen = !palmaresManagerOpen; render(); });
-  const clubInput = root.querySelector('#palmares-club-input'); if(clubInput) { clubInput.addEventListener('input', () => { palmaresViewClubOverride = clubInput.value; }); clubInput.addEventListener('change', () => { const typed = clubInput.value.trim(); palmaresViewClubOverride = (typed && typed.toLowerCase() !== getActiveClub().toLowerCase()) ? typed : ''; render(); }); }
-  const resetClubBtn = root.querySelector('[data-action="reset-palmares-club"]'); if(resetClubBtn) resetClubBtn.addEventListener('click', () => { palmaresViewClubOverride = ''; render(); });
+  const clubInput = root.querySelector('#palmares-club-input'); if(clubInput) { clubInput.addEventListener('input', () => { state.activePalmaresClub = clubInput.value; touch(); }); clubInput.addEventListener('change', () => { state.activePalmaresClub = clubInput.value.trim() || 'Real Sociedad'; touch(); render(); }); }
   const searchInput = root.querySelector('#palmares-search-input'); if(searchInput) searchInput.addEventListener('input', () => { const q = searchInput.value.trim().toLowerCase(); root.querySelectorAll('.clubrec-row').forEach((row) => { const nameInput = row.querySelector('[data-field="name"]'); const match = !q || (nameInput && nameInput.value.toLowerCase().includes(q)); row.style.display = match ? '' : 'none'; }); });
   const addClubrecBtn = root.querySelector('[data-action="add-clubrec"]'); if(addClubrecBtn) addClubrecBtn.addEventListener('click', () => { getClubRecords(computeViewClub()).push(emptyClubRecord('Nouveau joueur', 0, 0, 0)); touch(); render(); });
   root.querySelectorAll('[data-action="delete-clubrec"]').forEach((el) => el.addEventListener('click', () => { const club = computeViewClub(); state.clubsData[club] = getClubRecords(club).filter((rec) => rec.id !== el.dataset.id); touch(); render(); }));
