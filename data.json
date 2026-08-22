@@ -4,8 +4,8 @@
     {
       "id": "mt2vroib3k8ff",
       "name": "Yuto Nishimura",
-      "currentClub": "Dortmund II",
-      "currentLeague": "D3 Allemagne",
+      "currentClub": "Real Sociedad",
+      "currentLeague": "Liga",
       "dreamClub": "Dortmund ",
       "dreamLeague": "BUNDESLIGA",
       "goals": [
@@ -55,5 +55,6 @@
         }
       ]
     }
-  ]
+  ],
+  "activePalmaresClub": "Real Sociedad"
 }
