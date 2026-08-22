@@ -1,0 +1,59 @@
+{
+  "updatedAt": "2026-08-21T12:30:10.817Z",
+  "players": [
+    {
+      "id": "mt2vroib3k8ff",
+      "name": "Yuto Nishimura",
+      "currentClub": "Dortmund II",
+      "currentLeague": "D3 Allemagne",
+      "dreamClub": "Dortmund ",
+      "dreamLeague": "BUNDESLIGA",
+      "goals": [
+        {
+          "id": "mt2vroib3nroo",
+          "text": "Monter dans l'équipe première "
+        },
+        {
+          "id": "mt2wdxbzmj99o",
+          "text": "Être appelé par la sélection "
+        },
+        {
+          "id": "mt2we8s2qq94x",
+          "text": "Faire un match de CDM"
+        }
+      ],
+      "years": [
+        {
+          "id": "mt2vroib5pb6l",
+          "age": "16",
+          "club": "Dortmund II (D4 ALL)",
+          "niveau": "47",
+          "potentiel": "52",
+          "potentielDelta": "+13",
+          "matches": "3",
+          "buts": "0",
+          "pd": "0",
+          "note": "8.6",
+          "bonus": "Champion, Promu, Note",
+          "objectif": "5/4",
+          "contrat": "3 ans"
+        },
+        {
+          "id": "mt2wjmyklpt7k",
+          "age": "17",
+          "club": "Dortmund II (D3 ALL)",
+          "niveau": "",
+          "potentiel": "",
+          "potentielDelta": "",
+          "matches": "",
+          "buts": "",
+          "pd": "",
+          "note": "",
+          "bonus": "",
+          "objectif": "",
+          "contrat": ""
+        }
+      ]
+    }
+  ]
+}
